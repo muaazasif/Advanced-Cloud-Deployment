@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends, HTTPException, Query
 from sqlmodel import Session, select
 from .database import create_db_and_tables, get_session
@@ -11,12 +12,16 @@ from apscheduler.triggers.cron import CronTrigger
 import pytz
 import os
 
-app = FastAPI(title="Todo Chatbot API", version="1.0.0")
-
-@app.on_event("startup")
-def on_startup():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup
     create_db_and_tables()
     start_scheduler()
+    yield
+    # Shutdown
+    # Add any cleanup code here if needed
+
+app = FastAPI(title="Todo Chatbot API", version="1.0.0", lifespan=lifespan)
 
 # Scheduler for reminders
 scheduler = AsyncIOScheduler()
