@@ -16,22 +16,19 @@
         body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow-x: hidden;
+            padding: 20px;
         }
 
         .container {
             width: 100%;
             max-width: 1200px;
-            padding: 20px;
+            margin: 0 auto;
         }
 
         .header {
             text-align: center;
             margin-bottom: 40px;
-            animation: fadeInDown 1s ease-out;
+            padding: 20px;
         }
 
         .header h1 {
@@ -64,12 +61,7 @@
             text-align: center;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             border: 1px solid rgba(255,255,255,0.2);
-            animation: float 6s ease-in-out infinite;
         }
-
-        .feature-card:nth-child(2) { animation-delay: 0.5s; }
-        .feature-card:nth-child(3) { animation-delay: 1s; }
-        .feature-card:nth-child(4) { animation-delay: 1.5s; }
 
         .feature-card:hover {
             transform: translateY(-10px);
@@ -94,72 +86,6 @@
             line-height: 1.6;
         }
 
-        .cta-section {
-            text-align: center;
-            margin-top: 50px;
-        }
-
-        .cta-button {
-            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
-            color: white;
-            padding: 15px 40px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(255,107,107,0.4);
-            animation: pulse 2s infinite;
-        }
-
-        .cta-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 15px 40px rgba(255,107,107,0.6);
-        }
-
-        .floating-elements {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .floating-element {
-            position: absolute;
-            opacity: 0.1;
-            animation: float 8s ease-in-out infinite;
-        }
-
-        .floating-element:nth-child(1) { top: 10%; left: 10%; font-size: 4rem; animation-delay: 0s; }
-        .floating-element:nth-child(2) { top: 20%; right: 15%; font-size: 3rem; animation-delay: 1s; }
-        .floating-element:nth-child(3) { bottom: 15%; left: 20%; font-size: 5rem; animation-delay: 2s; }
-        .floating-element:nth-child(4) { bottom: 25%; right: 25%; font-size: 2.5rem; animation-delay: 3s; }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
         .stats-section {
             display: flex;
             justify-content: space-around;
@@ -171,7 +97,6 @@
         .stat-item {
             color: white;
             margin: 20px;
-            animation: fadeInUp 1s ease-out;
         }
 
         .stat-number {
@@ -185,29 +110,36 @@
             opacity: 0.8;
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .cta-section {
+            text-align: center;
+            margin: 50px 0;
         }
 
-        /* NEW STYLES FOR DASHBOARD */
+        .cta-button {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255,107,107,0.4);
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(255,107,107,0.6);
+        }
+
+        /* DASHBOARD STYLES - ALWAYS VISIBLE */
         .dashboard {
             background: rgba(0, 0, 0, 0.3);
             border-radius: 15px;
             padding: 30px;
             margin-top: 30px;
-            display: none; /* Initially hidden */
-        }
-        
-        /* Show dashboard when active */
-        .dashboard.active {
-            display: block;
+            display: block; /* Always visible now */
         }
 
         .controls {
@@ -335,13 +267,6 @@
     </style>
 </head>
 <body>
-    <div class="floating-elements">
-        <div class="floating-element"><i class="fas fa-tasks"></i></div>
-        <div class="floating-element"><i class="fas fa-bell"></i></div>
-        <div class="floating-element"><i class="fas fa-sync-alt"></i></div>
-        <div class="floating-element"><i class="fas fa-search"></i></div>
-    </div>
-
     <div class="container">
         <div class="header">
             <h1><i class="fas fa-robot"></i> Advanced Todo Chatbot</h1>
@@ -403,11 +328,11 @@
 
         <div class="cta-section">
             <button class="cta-button" id="startButton">
-                <i class="fas fa-play-circle"></i> Start Managing Tasks
+                <i class="fas fa-check-circle"></i> Connected!
             </button>
         </div>
 
-        <!-- NEW DASHBOARD SECTION -->
+        <!-- DASHBOARD - NOW ALWAYS VISIBLE -->
         <div class="dashboard" id="dashboard">
             <div class="controls">
                 <button class="btn add-btn" onclick="showAddTaskModal()">[ + Add Task ]</button>
@@ -451,7 +376,7 @@
         </div>
         
         <!-- Activity Log -->
-        <div class="activity-log" id="activityLog" style="display: none;">
+        <div class="activity-log" id="activityLog">
             <h3>Activity Log</h3>
             <div id="activity-log-list">
                 <div class="activity-item">
@@ -565,22 +490,6 @@
             {id: '4', action: 'Reminder Sent', timestamp: '09:00 AM', details: 'Daily standup meeting'},
             {id: '5', action: 'Task Created', timestamp: 'Yesterday', details: 'Prepare presentation slides'}
         ];
-
-        // Show dashboard when Start Managing Tasks button is clicked
-        document.getElementById('startButton').addEventListener('click', function() {
-            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connecting...';
-            setTimeout(() => {
-                this.innerHTML = '<i class="fas fa-check-circle"></i> Connected!';
-                this.style.background = 'linear-gradient(45deg, #00b894, #00a085)';
-                
-                // Show dashboard after connection
-                document.getElementById('dashboard').classList.add('active');
-                document.getElementById('activityLog').style.display = 'block';
-                
-                // Scroll to dashboard
-                document.getElementById('dashboard').scrollIntoView({ behavior: 'smooth' });
-            }, 2000);
-        });
 
         // Show add task modal
         function showAddTaskModal() {
@@ -809,6 +718,10 @@
         function initApp() {
             // Set up form submission
             document.getElementById('add-task-form').addEventListener('submit', addTask);
+            
+            // Set the button to show "Connected!" immediately
+            document.getElementById('startButton').innerHTML = '<i class="fas fa-check-circle"></i> Connected!';
+            document.getElementById('startButton').style.background = 'linear-gradient(45deg, #00b894, #00a085)';
         }
 
         // Start the app when the page loads
