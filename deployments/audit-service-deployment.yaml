@@ -1,0 +1,39 @@
+# Deployment manifest for Audit Service with Dapr sidecar
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: audit-service
+  labels:
+    app: audit-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: audit-service
+  template:
+    metadata:
+      labels:
+        app: audit-service
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "audit-service"
+        dapr.io/config: "dapr-config"
+        dapr.io/components-path: "/dapr/components"
+    spec:
+      containers:
+      - name: audit-service
+        image: todo-audit-service:latest
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://postgres:5432/todo_db"
+        - name: KAFKA_BOOTSTRAP_SERVERS
+          value: "kafka:9092"
+        - name: USE_DAPR
+          value: "true"
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"

@@ -1,0 +1,39 @@
+# Deployment manifest for Recurring Task Service with Dapr sidecar
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recurring-task-service
+  labels:
+    app: recurring-task-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: recurring-task-service
+  template:
+    metadata:
+      labels:
+        app: recurring-task-service
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "recurring-task-service"
+        dapr.io/config: "dapr-config"
+        dapr.io/components-path: "/dapr/components"
+    spec:
+      containers:
+      - name: recurring-task-service
+        image: todo-recurring-task-service:latest
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://postgres:5432/todo_db"
+        - name: KAFKA_BOOTSTRAP_SERVERS
+          value: "kafka:9092"
+        - name: USE_DAPR
+          value: "true"
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
