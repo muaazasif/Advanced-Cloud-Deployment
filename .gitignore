@@ -95,32 +95,19 @@ celerybeat.pid
 # SageMath parsed files
 *.sage.py
 
-# Environments
-.env
-.venv
-env/
+# Django and Flask migration files
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg-info/
+*.egg
+
+# Virtual environments
 venv/
+env/
 ENV/
-env.bak/
-venv.bak/
-
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
-# mkdocs documentation
-/site
-
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Pyre type checker
-.pyre/
 
 # IDEs
 .vscode/
@@ -135,15 +122,6 @@ dmypy.json
 ehthumbs.db
 Thumbs.db
 
-# Docker
-.dockerignore
-
-# Kubernetes
-*.kubeconfig
-
-# Dapr
-.dapr/
-
 # Logs
 logs/
 *.log
@@ -153,3 +131,12 @@ logs/
 *.swp
 *.swo
 *~
+
+# Docker
+.dockerignore
+
+# Kubernetes
+*.kubeconfig
+
+# Dapr
+.dapr/
