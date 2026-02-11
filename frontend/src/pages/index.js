@@ -139,16 +139,29 @@ export default function Home({ tasks }) {
         <div className={styles.taskContainer}>
           <h2 className={styles.sectionTitle}>Manage Your Tasks</h2>
           
+          <div className={styles.controls}>
+            <button className={styles.addBtn} onClick={() => document.getElementById('taskInput').focus()}>
+              <i className="fas fa-plus"></i> [ + Add Task ]
+            </button>
+            <button className={styles.searchBtn}>
+              <i className="fas fa-search"></i> [ Search 🔍 ]
+            </button>
+            <button className={styles.filterBtn}>
+              <i className="fas fa-filter"></i> [ Filters ⚡ ]
+            </button>
+          </div>
+
           <form onSubmit={createTask} className={styles.taskForm}>
             <input
+              id="taskInput"
               type="text"
               value={newTask}
               onChange={(e) => setNewTask(e.target.value)}
               placeholder="Enter a new task..."
               className={styles.taskInput}
             />
-            <button type="submit" className={styles.addButton}>
-              <i className="fas fa-plus"></i> Add Task
+            <button type="submit" className={styles.submitButton}>
+              <i className="fas fa-plus-circle"></i> Add Task
             </button>
           </form>
 
@@ -157,20 +170,25 @@ export default function Home({ tasks }) {
           ) : (
             <div className={styles.tasksList}>
               {tasksData.map((task) => (
-                <div key={task.id} className={styles.taskItem}>
+                <div key={task.id} className={styles.taskCard}>
                   <div className={styles.taskInfo}>
-                    <h4>{task.title}</h4>
-                    <p>{task.description}</p>
-                    <div className={styles.taskMeta}>
-                      <span className={`${styles.priority} ${styles[`priority-${task.priority}`]}`}>
-                        {task.priority}
-                      </span>
-                      {task.due_date && (
-                        <span className={styles.dueDate}>
-                          Due: {new Date(task.due_date).toLocaleDateString()}
-                        </span>
-                      )}
-                    </div>
+                    <h3>{task.title}</h3>
+                    <p>🏷 Tags: {task.tags || 'No tags'}</p>
+                    <p>⚡ Priority: {task.priority}</p>
+                    <p>📅 Due: {task.due_date ? new Date(task.due_date).toLocaleDateString() : 'No due date'}</p>
+                    <p>🔁 Recurring: {task.recurrence_pattern || 'None'}</p>
+                    <p>⏰ Reminder: {task.reminder_sent ? 'Sent' : 'Pending'}</p>
+                  </div>
+                  <div className={styles.taskActions}>
+                    <button className={styles.completeBtn}>
+                      <i className="fas fa-check-circle"></i> [✅ Complete]
+                    </button>
+                    <button className={styles.editBtn}>
+                      <i className="fas fa-edit"></i> [✏ Edit]
+                    </button>
+                    <button className={styles.deleteBtn}>
+                      <i className="fas fa-trash-alt"></i> [🗑 Delete]
+                    </button>
                   </div>
                 </div>
               ))}
