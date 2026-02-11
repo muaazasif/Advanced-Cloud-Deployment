@@ -69,6 +69,10 @@ async def check_for_due_tasks():
 def read_root():
     return {"message": "Todo Chatbot API"}
 
+@app.get("/health")
+def health_check():
+    return {"status": "healthy", "message": "Todo Chatbot API is running"}
+
 @app.get("/tasks/", response_model=List[Task])
 def get_tasks(
     skip: int = 0,
