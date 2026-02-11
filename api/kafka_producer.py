@@ -12,13 +12,24 @@ class KafkaEventProducer:
         self.use_dapr = os.getenv("USE_DAPR", "false").lower() == "true"
         
         if not self.use_dapr:
-            kafka_bootstrap_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
-            self.producer = KafkaProducer(
-                bootstrap_servers=kafka_bootstrap_servers,
-                value_serializer=lambda v: json.dumps(v).encode('utf-8'),
-                acks='all',
-                retries=3
-            )
+            kafka_bootstrap_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "")
+            if kafka_bootstrap_servers:
+                try:
+                    self.producer = KafkaProducer(
+                        bootstrap_servers=kafka_bootstrap_servers,
+                        value_serializer=lambda v: json.dumps(v).encode('utf-8'),
+                        acks='all',
+                        retries=3
+                    )
+                    self.kafka_available = True
+                except Exception as e:
+                    print(f"Failed to connect to Kafka: {e}")
+                    self.kafka_available = False
+            else:
+                print("KAFKA_BOOTSTRAP_SERVERS not set, skipping Kafka initialization")
+                self.kafka_available = False
+        else:
+            self.kafka_available = True  # Assume Dapr is available when enabled
     
     async def publish_event(self, topic: str, event_data: Dict[str, Any]):
         """Publish an event to Kafka topic"""
@@ -38,6 +49,10 @@ class KafkaEventProducer:
                     return False
         else:
             # Using direct Kafka
+            if not self.kafka_available:
+                print("Kafka not available, skipping event publication")
+                return False
+                
             try:
                 future = self.producer.send(topic, value=event_data)
                 result = future.get(timeout=10)
@@ -47,7 +62,7 @@ class KafkaEventProducer:
                 return False
     
     def close(self):
-        if hasattr(self, 'producer'):
+        if hasattr(self, 'producer') and self.kafka_available:
             self.producer.close()
 
 

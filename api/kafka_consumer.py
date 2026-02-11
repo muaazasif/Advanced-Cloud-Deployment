@@ -11,25 +11,39 @@ from .kafka_producer import kafka_producer
 
 class KafkaEventConsumer:
     def __init__(self):
-        kafka_bootstrap_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
-        self.consumer = KafkaConsumer(
-            bootstrap_servers=kafka_bootstrap_servers,
-            value_deserializer=lambda m: json.loads(m.decode('utf-8')),
-            auto_offset_reset='earliest',
-            group_id='todo-group'
-        )
+        kafka_bootstrap_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "")
+        if kafka_bootstrap_servers:
+            try:
+                self.consumer = KafkaConsumer(
+                    bootstrap_servers=kafka_bootstrap_servers,
+                    value_deserializer=lambda m: json.loads(m.decode('utf-8')),
+                    auto_offset_reset='earliest',
+                    group_id='todo-group'
+                )
+                self.kafka_available = True
+            except Exception as e:
+                print(f"Failed to connect to Kafka: {e}")
+                self.kafka_available = False
+        else:
+            print("KAFKA_BOOTSTRAP_SERVERS not set, skipping Kafka consumer initialization")
+            self.kafka_available = False
         
-        # Register event handlers
-        self.event_handlers = {
-            'task.created': self.handle_task_created,
-            'task.updated': self.handle_task_updated,
-            'task.completed': self.handle_task_completed,
-            'task.deleted': self.handle_task_deleted,
-            'reminder.triggered': self.handle_reminder_triggered
-        }
+        if self.kafka_available:
+            # Register event handlers
+            self.event_handlers = {
+                'task.created': self.handle_task_created,
+                'task.updated': self.handle_task_updated,
+                'task.completed': self.handle_task_completed,
+                'task.deleted': self.handle_task_deleted,
+                'reminder.triggered': self.handle_reminder_triggered
+            }
     
     def start_consuming(self):
         """Start consuming messages from Kafka"""
+        if not self.kafka_available:
+            print("Kafka not available, skipping consumer start")
+            return
+            
         self.consumer.subscribe(['task-events', 'reminders', 'task-updates'])
         
         print("Starting Kafka consumer...")
@@ -141,6 +155,10 @@ def start_kafka_consumer():
     consumer.start_consuming()
 
 
-# Start consumer in a separate thread
-consumer_thread = threading.Thread(target=start_kafka_consumer, daemon=True)
-consumer_thread.start()
+# Start consumer in a separate thread only if Kafka is available
+kafka_bootstrap_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "")
+if kafka_bootstrap_servers:
+    consumer_thread = threading.Thread(target=start_kafka_consumer, daemon=True)
+    consumer_thread.start()
+else:
+    print("KAFKA_BOOTSTRAP_SERVERS not set, skipping Kafka consumer thread")
