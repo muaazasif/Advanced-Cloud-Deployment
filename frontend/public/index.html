@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Todo Chatbot - Complete Version</title>
+    <title>Advanced Todo Chatbot - Professional Edition</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -64,6 +65,7 @@
             font-size: 2.5rem;
             font-weight: bold;
             margin-bottom: 5px;
+            color: #4CAF50;
         }
 
         .features {
@@ -108,11 +110,12 @@
             border-radius: 15px;
             padding: 30px;
             margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
         .controls {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             margin-bottom: 20px;
             flex-wrap: wrap;
             gap: 10px;
@@ -125,6 +128,9 @@
             cursor: pointer;
             font-weight: bold;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .add-btn {
@@ -132,9 +138,19 @@
             color: white;
         }
 
+        .add-btn:hover {
+            background: #45a049;
+            transform: scale(1.05);
+        }
+
         .search-btn {
             background: #2196F3;
             color: white;
+        }
+
+        .search-btn:hover {
+            background: #0b7dda;
+            transform: scale(1.05);
         }
 
         .filter-btn {
@@ -142,10 +158,16 @@
             color: white;
         }
 
+        .filter-btn:hover {
+            background: #e68900;
+            transform: scale(1.05);
+        }
+
         .task-list {
             display: flex;
             flex-direction: column;
             gap: 15px;
+            margin-top: 20px;
         }
 
         .task-card {
@@ -156,6 +178,12 @@
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
+            transition: transform 0.3s ease;
+        }
+
+        .task-card:hover {
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.15);
         }
 
         .task-info {
@@ -166,6 +194,7 @@
         .task-actions {
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
         }
 
         .action-btn {
@@ -174,6 +203,10 @@
             border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
         }
 
         .complete-btn {
@@ -181,14 +214,26 @@
             color: white;
         }
 
+        .complete-btn:hover {
+            background: #45a049;
+        }
+
         .edit-btn {
             background: #FF9800;
             color: white;
         }
 
+        .edit-btn:hover {
+            background: #e68900;
+        }
+
         .delete-btn {
             background: #f44336;
             color: white;
+        }
+
+        .delete-btn:hover {
+            background: #d32f2f;
         }
 
         .notification {
@@ -200,7 +245,7 @@
             padding: 15px;
             border-radius: 10px;
             z-index: 1000;
-            display: none;
+            display: block;
         }
 
         .activity-log {
@@ -226,6 +271,18 @@
             
             .controls {
                 flex-direction: column;
+                align-items: center;
+            }
+            
+            .task-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .task-actions {
+                margin-top: 10px;
+                width: 100%;
+                justify-content: space-between;
             }
         }
 
@@ -244,7 +301,7 @@
     <div class="container">
         <!-- Header Section -->
         <header>
-            <h1>Advanced Todo Chatbot</h1>
+            <h1><i class="fas fa-robot"></i> Advanced Todo Chatbot</h1>
             <p class="subtitle">Experience the future of task management with AI-powered intelligence and seamless automation</p>
         </header>
         
@@ -297,12 +354,18 @@
             Connected!
         </div>
         
-        <!-- Task Dashboard - NOW ALWAYS VISIBLE -->
+        <!-- Task Dashboard - PROFESSIONAL DESIGN -->
         <div class="dashboard">
             <div class="controls">
-                <button class="btn add-btn">[ + Add Task ]</button>
-                <button class="btn search-btn">[ Search 🔍 ]</button>
-                <button class="btn filter-btn">[ Filters ⚡ ]</button>
+                <button class="btn add-btn">
+                    <i class="fas fa-plus"></i> [ + Add Task ]
+                </button>
+                <button class="btn search-btn">
+                    <i class="fas fa-search"></i> [ Search 🔍 ]
+                </button>
+                <button class="btn filter-btn">
+                    <i class="fas fa-filter"></i> [ Filters ⚡ ]
+                </button>
             </div>
             
             <div class="task-list">
@@ -316,9 +379,15 @@
                         <p>⏰ Reminder: 2 hours before</p>
                     </div>
                     <div class="task-actions">
-                        <button class="action-btn complete-btn">[✅ Complete]</button>
-                        <button class="action-btn edit-btn">[✏ Edit]</button>
-                        <button class="action-btn delete-btn">[🗑 Delete]</button>
+                        <button class="action-btn complete-btn">
+                            <i class="fas fa-check-circle"></i> [✅ Complete]
+                        </button>
+                        <button class="action-btn edit-btn">
+                            <i class="fas fa-edit"></i> [✏ Edit]
+                        </button>
+                        <button class="action-btn delete-btn">
+                            <i class="fas fa-trash-alt"></i> [🗑 Delete]
+                        </button>
                     </div>
                 </div>
                 
@@ -332,9 +401,37 @@
                         <p>⏰ Reminder: 1 day before</p>
                     </div>
                     <div class="task-actions">
-                        <button class="action-btn complete-btn">[✅ Complete]</button>
-                        <button class="action-btn edit-btn">[✏ Edit]</button>
-                        <button class="action-btn delete-btn">[🗑 Delete]</button>
+                        <button class="action-btn complete-btn">
+                            <i class="fas fa-check-circle"></i> [✅ Complete]
+                        </button>
+                        <button class="action-btn edit-btn">
+                            <i class="fas fa-edit"></i> [✏ Edit]
+                        </button>
+                        <button class="action-btn delete-btn">
+                            <i class="fas fa-trash-alt"></i> [🗑 Delete]
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="task-card">
+                    <div class="task-info">
+                        <h3>🔍 Review Security Protocols</h3>
+                        <p>🏷 Tags: Security, Audit</p>
+                        <p>⚡ Priority: High</p>
+                        <p>📅 Due: 12 Feb 2026</p>
+                        <p>🔁 Recurring: Monthly</p>
+                        <p>⏰ Reminder: 1 hour before</p>
+                    </div>
+                    <div class="task-actions">
+                        <button class="action-btn complete-btn">
+                            <i class="fas fa-check-circle"></i> [✅ Complete]
+                        </button>
+                        <button class="action-btn edit-btn">
+                            <i class="fas fa-edit"></i> [✏ Edit]
+                        </button>
+                        <button class="action-btn delete-btn">
+                            <i class="fas fa-trash-alt"></i> [🗑 Delete]
+                        </button>
                     </div>
                 </div>
             </div>
@@ -355,6 +452,14 @@
                 <div class="activity-item">
                     <strong>Task Completed</strong> - 12:00 PM<br>
                     <small>Complete Kubernetes Assignment</small>
+                </div>
+                <div class="activity-item">
+                    <strong>Reminder Sent</strong> - 09:00 AM<br>
+                    <small>Daily standup meeting</small>
+                </div>
+                <div class="activity-item">
+                    <strong>Task Created</strong> - Yesterday<br>
+                    <small>Prepare presentation slides</small>
                 </div>
             </div>
         </div>
