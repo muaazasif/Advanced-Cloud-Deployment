@@ -15,18 +15,18 @@ RUN apt-get update \
         curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy poetry files
-COPY ./pyproject.toml ./poetry.lock* /app/
-
 # Install Poetry
 RUN curl -sSL https://install.python-poetry.org | python3 -
 
 # Add poetry to PATH
 ENV PATH="/root/.local/bin:$PATH"
 
+# Copy poetry files
+COPY ./pyproject.toml ./poetry.lock* ./
+
 # Install dependencies
 RUN poetry config virtualenvs.create false \
-    && poetry install --only=main --no-interaction
+    && poetry install --only=main --no-interaction --no-root
 
 # Copy project
 COPY . /app/

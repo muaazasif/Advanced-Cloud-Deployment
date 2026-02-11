@@ -3,6 +3,7 @@ name = "advanced-cloud-deployment"
 version = "0.1.0"
 description = "Advanced Cloud Deployment - Todo Chatbot with Kafka and Dapr"
 authors = ["Your Name <your.email@example.com>"]
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.9"
