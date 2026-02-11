@@ -727,6 +727,11 @@ def app_interface():
                 <div class="task-header">
                     <h3 class="task-title">${task.title}</h3>
                     <div class="task-actions">
+                        ${task.status !== 'completed' ? 
+                          `<button class="btn btn-primary" onclick="completeTask(${task.id})" title="Complete task">
+                              <i class="fas fa-check"></i>
+                           </button>` : 
+                          `<span class="task-status status-completed">Completed</span>`}
                         <button class="delete-btn" onclick="deleteTask(${task.id})" title="Delete task">
                             <i class="fas fa-trash"></i>
                         </button>
@@ -812,6 +817,28 @@ def app_interface():
                 }
             } catch (error) {
                 alert('Error deleting task: ' + error.message);
+            }
+        }
+
+        async function completeTask(taskId) {
+            if (!confirm('Are you sure you want to mark this task as completed?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/tasks/${taskId}/complete`, {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    loadTasks();
+                    alert('Task marked as completed successfully!');
+                } else {
+                    const error = await response.json();
+                    alert('Error completing task: ' + JSON.stringify(error));
+                }
+            } catch (error) {
+                alert('Error completing task: ' + error.message);
             }
         }
 
