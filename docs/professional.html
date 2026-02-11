@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADVANCED TODO CHATBOT - FINAL PROFESSIONAL DESIGN</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px rgba(76, 175, 80, 0.8);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 25px;
+            width: 22%;
+            min-width: 150px;
+            text-align: center;
+            margin: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            background: rgba(76, 175, 80, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2.8rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #4CAF50;
+            text-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-15px);
+            background: rgba(76, 175, 80, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .feature-icon {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: #4CAF50;
+            text-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
+        }
+
+        .feature-title {
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .feature-desc {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .connection-status {
+            text-align: center;
+            margin: 30px 0;
+            font-size: 1.4rem;
+            padding: 15px;
+            background: linear-gradient(45deg, #4CAF50, #8BC34A);
+            border-radius: 15px;
+            display: inline-block;
+            width: auto;
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .dashboard {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 40px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            font-size: 1.1rem;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .add-btn {
+            background: linear-gradient(45deg, #4CAF50, #2E7D32);
+            color: white;
+            min-width: 180px;
+        }
+
+        .search-btn {
+            background: linear-gradient(45deg, #2196F3, #0D47A1);
+            color: white;
+            min-width: 160px;
+        }
+
+        .filter-btn {
+            background: linear-gradient(45deg, #FF9800, #EF6C00);
+            color: white;
+            min-width: 150px;
+        }
+
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .task-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .task-card:hover {
+            transform: translateX(8px);
+            background: rgba(76, 175, 80, 0.25);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .task-info {
+            flex: 1;
+            min-width: 350px;
+        }
+
+        .task-info h3 {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            color: #4CAF50;
+        }
+
+        .task-info p {
+            margin: 8px 0;
+            font-size: 1rem;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .complete-btn {
+            background: linear-gradient(45deg, #4CAF50, #2E7D32);
+            color: white;
+        }
+
+        .edit-btn {
+            background: linear-gradient(45deg, #FF9800, #EF6C00);
+            color: white;
+        }
+
+        .delete-btn {
+            background: linear-gradient(45deg, #f44336, #C62828);
+            color: white;
+        }
+
+        .notification {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            background: linear-gradient(45deg, #FF9800, #F57C00);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            z-index: 1000;
+            display: block;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .activity-log {
+            margin-top: 40px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .activity-item {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: background 0.3s ease;
+        }
+
+        .activity-item:hover {
+            background: rgba(76, 175, 80, 0.1);
+            border-radius: 8px;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        @media (max-width: 768px) {
+            .stat-card {
+                width: 45%;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .task-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .task-actions {
+                margin-top: 15px;
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stat-card {
+                width: 100%;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .btn {
+                padding: 12px 15px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header>
+            <h1><i class="fas fa-robot"></i> ADVANCED TODO CHATBOT</h1>
+            <p class="subtitle">Experience the future of task management with AI-powered intelligence and seamless automation</p>
+        </header>
+        
+        <!-- Stats Section -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">10K+</div>
+                <div>Tasks Managed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">99%</div>
+                <div>Uptime</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">24</div>
+                <div>Automation</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">150</div>
+                <div>Features</div>
+            </div>
+        </div>
+        
+        <!-- Features Section -->
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <h3 class="feature-title">Smart Recurring Tasks</h3>
+                <p class="feature-desc">Automatically create recurring tasks with intelligent scheduling and pattern recognition.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔔</div>
+                <h3 class="feature-title">Intelligent Reminders</h3>
+                <p class="feature-desc">Get timely notifications with smart algorithms that learn your preferences and habits.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🏷️</div>
+                <h3 class="feature-title">Advanced Tagging</h3>
+                <p class="feature-desc">Organize tasks with powerful tagging system and smart categorization features.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h3 class="feature-title">Smart Filtering</h3>
+                <p class="feature-desc">Find exactly what you need with advanced search, filter and sort capabilities.</p>
+            </div>
+        </div>
+        
+        <!-- Connection Status -->
+        <div class="connection-status">
+            <i class="fas fa-check-circle"></i> SYSTEM OPERATIONAL - CONNECTED!
+        </div>
+        
+        <!-- Task Dashboard - ULTIMATE PROFESSIONAL DESIGN -->
+        <div class="dashboard">
+            <div class="controls">
+                <button class="btn add-btn">
+                    <i class="fas fa-plus-circle"></i> [ + Add Task ]
+                </button>
+                <button class="btn search-btn">
+                    <i class="fas fa-search"></i> [ Search 🔍 ]
+                </button>
+                <button class="btn filter-btn">
+                    <i class="fas fa-filter"></i> [ Filters ⚡ ]
+                </button>
+            </div>
+            
+            <div class="task-list">
+                <div class="task-card">
+                    <div class="task-info">
+                        <h3>📝 Complete Kubernetes Assignment</h3>
+                        <p>🏷 Tags: DevOps, Hackathon</p>
+                        <p>⚡ Priority: <strong>High</strong></p>
+                        <p>📅 Due: <strong>15 Feb 2026</strong></p>
+                        <p>🔁 Recurring: <strong>Weekly</strong></p>
+                        <p>⏰ Reminder: <strong>2 hours before</strong></p>
+                    </div>
+                    <div class="task-actions">
+                        <button class="action-btn complete-btn">
+                            <i class="fas fa-check-circle"></i> [✅ Complete]
+                        </button>
+                        <button class="action-btn edit-btn">
+                            <i class="fas fa-edit"></i> [✏ Edit]
+                        </button>
+                        <button class="action-btn delete-btn">
+                            <i class="fas fa-trash-alt"></i> [🗑 Delete]
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="task-card">
+                    <div class="task-info">
+                        <h3>💻 Deploy Microservices</h3>
+                        <p>🏷 Tags: Backend, Production</p>
+                        <p>⚡ Priority: <strong>Medium</strong></p>
+                        <p>📅 Due: <strong>18 Feb 2026</strong></p>
+                        <p>🔁 Recurring: <strong>None</strong></p>
+                        <p>⏰ Reminder: <strong>1 day before</strong></p>
+                    </div>
+                    <div class="task-actions">
+                        <button class="action-btn complete-btn">
+                            <i class="fas fa-check-circle"></i> [✅ Complete]
+                        </button>
+                        <button class="action-btn edit-btn">
+                            <i class="fas fa-edit"></i> [✏ Edit]
+                        </button>
+                        <button class="action-btn delete-btn">
+                            <i class="fas fa-trash-alt"></i> [🗑 Delete]
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="task-card">
+                    <div class="task-info">
+                        <h3>🔍 Review Security Protocols</h3>
+                        <p>🏷 Tags: Security, Audit</p>
+                        <p>⚡ Priority: <strong>High</strong></p>
+                        <p>📅 Due: <strong>12 Feb 2026</strong></p>
+                        <p>🔁 Recurring: <strong>Monthly</strong></p>
+                        <p>⏰ Reminder: <strong>1 hour before</strong></p>
+                    </div>
+                    <div class="task-actions">
+                        <button class="action-btn complete-btn">
+                            <i class="fas fa-check-circle"></i> [✅ Complete]
+                        </button>
+                        <button class="action-btn edit-btn">
+                            <i class="fas fa-edit"></i> [✏ Edit]
+                        </button>
+                        <button class="action-btn delete-btn">
+                            <i class="fas fa-trash-alt"></i> [🗑 Delete]
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Activity Log -->
+        <div class="activity-log">
+            <h3 style="text-align: center; margin-bottom: 20px; color: #4CAF50; font-size: 1.8rem;"><i class="fas fa-history"></i> Activity Log</h3>
+            <div>
+                <div class="activity-item">
+                    <strong>✅ Task Completed</strong> - 12:00 PM<br>
+                    <small>Complete Kubernetes Assignment</small>
+                </div>
+                <div class="activity-item">
+                    <strong>✏ Task Updated</strong> - 10:10 AM<br>
+                    <small>Updated priority to HIGH</small>
+                </div>
+                <div class="activity-item">
+                    <strong>➕ Task Created</strong> - 10:05 AM<br>
+                    <small>Complete Kubernetes Assignment</small>
+                </div>
+                <div class="activity-item">
+                    <strong>🔔 Reminder Sent</strong> - 09:00 AM<br>
+                    <small>Daily standup meeting</small>
+                </div>
+                <div class="activity-item">
+                    <strong>➕ Task Created</strong> - Yesterday<br>
+                    <small>Prepare presentation slides</small>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Notification Popup -->
+        <div class="notification">
+            <strong>⏰ URGENT REMINDER!</strong><br>
+            Your task "Complete Kubernetes Assignment" is due in 2 hours.<br>
+            <small>Please complete it on time to avoid penalties.</small>
+        </div>
+    </div>
+</body>
+</html>
