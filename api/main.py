@@ -407,6 +407,426 @@ def read_root():
     """
     return HTMLResponse(content=html_content)
 
+# Enhanced HTML with delete functionality
+@app.get("/app", response_class=HTMLResponse)
+def app_interface():
+    html_content = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Todo Chatbot - App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .task-form {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.15);
+            color: white;
+            font-size: 1rem;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .tasks-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .task-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+            position: relative;
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .task-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .task-priority {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .priority-low { background: #00b894; }
+        .priority-medium { background: #fdcb6e; color: #333; }
+        .priority-high { background: #e17055; }
+
+        .task-description {
+            margin: 10px 0;
+            color: rgba(255,255,255,0.9);
+            line-height: 1.5;
+        }
+
+        .task-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.9rem;
+        }
+
+        .task-status {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        .status-todo { background: #a29bfe; }
+        .status-in-progress { background: #fdcb6e; color: #333; }
+        .status-completed { background: #00b894; }
+
+        .delete-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .delete-btn:hover {
+            background: #ff7675;
+            transform: scale(1.1);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            font-size: 1.2rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: rgba(255,255,255,0.7);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-tasks"></i> Advanced Todo Chatbot</h1>
+            <p>Manage your tasks with AI-powered intelligence</p>
+        </div>
+
+        <div class="task-form">
+            <h2><i class="fas fa-plus-circle"></i> Add New Task</h2>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="title">Title *</label>
+                    <input type="text" id="title" placeholder="Enter task title">
+                </div>
+                <div class="form-group">
+                    <label for="priority">Priority</label>
+                    <select id="priority">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="dueDate">Due Date</label>
+                    <input type="datetime-local" id="dueDate">
+                </div>
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status">
+                        <option value="todo" selected>To Do</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" rows="3" placeholder="Enter task description"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="tags">Tags (comma separated)</label>
+                <input type="text" id="tags" placeholder="work, urgent, project">
+            </div>
+            <button class="btn btn-primary" onclick="addTask()">
+                <i class="fas fa-plus"></i> Add Task
+            </button>
+        </div>
+
+        <h2><i class="fas fa-list"></i> Your Tasks</h2>
+        <div id="tasksContainer" class="tasks-container">
+            <div class="loading">Loading tasks...</div>
+        </div>
+    </div>
+
+    <script>
+        // Load tasks when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTasks();
+        });
+
+        async function loadTasks() {
+            try {
+                const response = await fetch('/tasks/');
+                const tasks = await response.json();
+                
+                const container = document.getElementById('tasksContainer');
+                
+                if (tasks.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            <h3>No tasks yet</h3>
+                            <p>Add your first task to get started!</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = '';
+                
+                tasks.forEach(task => {
+                    const taskCard = createTaskCard(task);
+                    container.appendChild(taskCard);
+                });
+            } catch (error) {
+                console.error('Error loading tasks:', error);
+                document.getElementById('tasksContainer').innerHTML = 
+                    '<div class="empty-state"><p>Error loading tasks</p></div>';
+            }
+        }
+
+        function createTaskCard(task) {
+            const card = document.createElement('div');
+            card.className = 'task-card';
+            card.innerHTML = `
+                <div class="task-header">
+                    <h3 class="task-title">${task.title}</h3>
+                    <div class="task-actions">
+                        <button class="delete-btn" onclick="deleteTask(${task.id})" title="Delete task">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="task-priority priority-${task.priority}">
+                    ${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)} Priority
+                </div>
+                ${task.description ? `<p class="task-description">${task.description}</p>` : ''}
+                <div class="task-meta">
+                    <span class="task-status status-${task.status.replace('_', '-')}">
+                        ${task.status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                    </span>
+                    <span>${task.due_date ? new Date(task.due_date).toLocaleString() : 'No due date'}</span>
+                </div>
+            `;
+            return card;
+        }
+
+        async function addTask() {
+            const title = document.getElementById('title').value;
+            const priority = document.getElementById('priority').value;
+            const status = document.getElementById('status').value;
+            const description = document.getElementById('description').value;
+            const dueDate = document.getElementById('dueDate').value;
+            const tags = document.getElementById('tags').value;
+
+            if (!title) {
+                alert('Please enter a task title');
+                return;
+            }
+
+            const taskData = {
+                title,
+                description: description || undefined,
+                priority,
+                status,
+                due_date: dueDate || undefined,
+                tags: tags || undefined
+            };
+
+            try {
+                const response = await fetch('/tasks/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(taskData)
+                });
+
+                if (response.ok) {
+                    document.getElementById('title').value = '';
+                    document.getElementById('description').value = '';
+                    document.getElementById('dueDate').value = '';
+                    document.getElementById('tags').value = '';
+                    loadTasks();
+                    alert('Task added successfully!');
+                } else {
+                    const error = await response.json();
+                    alert('Error adding task: ' + JSON.stringify(error));
+                }
+            } catch (error) {
+                alert('Error adding task: ' + error.message);
+            }
+        }
+
+        async function deleteTask(taskId) {
+            if (!confirm('Are you sure you want to delete this task?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/tasks/${taskId}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    loadTasks();
+                    alert('Task deleted successfully!');
+                } else {
+                    const error = await response.json();
+                    alert('Error deleting task: ' + JSON.stringify(error));
+                }
+            } catch (error) {
+                alert('Error deleting task: ' + error.message);
+            }
+        }
+
+        // Allow Enter key to submit task
+        document.getElementById('title').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addTask();
+            }
+        });
+    </script>
+</body>
+</html>
+    """
+    return HTMLResponse(content=html_content)
+
 @app.get("/health")
 def health_check():
     return {"status": "healthy", "message": "Todo Chatbot API is running"}
