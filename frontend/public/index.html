@@ -204,6 +204,11 @@
             margin-top: 30px;
             display: none; /* Initially hidden */
         }
+        
+        /* Show dashboard when active */
+        .dashboard.active {
+            display: block;
+        }
 
         .controls {
             display: flex;
@@ -569,7 +574,7 @@
                 this.style.background = 'linear-gradient(45deg, #00b894, #00a085)';
                 
                 // Show dashboard after connection
-                document.getElementById('dashboard').style.display = 'block';
+                document.getElementById('dashboard').classList.add('active');
                 document.getElementById('activityLog').style.display = 'block';
                 
                 // Scroll to dashboard
