@@ -196,6 +196,124 @@
             }
         }
 
+        /* NEW STYLES FOR DASHBOARD */
+        .dashboard {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            display: none; /* Initially hidden */
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .add-btn {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .search-btn {
+            background: #2196F3;
+            color: white;
+        }
+
+        .filter-btn {
+            background: #FF9800;
+            color: white;
+        }
+
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .task-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .task-info {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .complete-btn {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .edit-btn {
+            background: #FF9800;
+            color: white;
+        }
+
+        .delete-btn {
+            background: #f44336;
+            color: white;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 165, 0, 0.9);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            z-index: 1000;
+            display: none;
+        }
+
+        .activity-log {
+            margin-top: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .activity-item {
+            padding: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2.5rem;
@@ -203,6 +321,10 @@
             
             .features-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                flex-direction: column;
             }
         }
     </style>
@@ -275,52 +397,417 @@
         </div>
 
         <div class="cta-section">
-            <button class="cta-button">
+            <button class="cta-button" id="startButton">
                 <i class="fas fa-play-circle"></i> Start Managing Tasks
             </button>
+        </div>
+
+        <!-- NEW DASHBOARD SECTION -->
+        <div class="dashboard" id="dashboard">
+            <div class="controls">
+                <button class="btn add-btn" onclick="showAddTaskModal()">[ + Add Task ]</button>
+                <button class="btn search-btn" onclick="performSearch()">[ Search 🔍 ]</button>
+                <button class="btn filter-btn" onclick="applyFilters()">[ Filters ⚡ ]</button>
+            </div>
+            
+            <div class="task-list" id="task-list">
+                <div class="task-card">
+                    <div class="task-info">
+                        <h3>📝 Complete Kubernetes Assignment</h3>
+                        <p>🏷 Tags: DevOps, Hackathon</p>
+                        <p>⚡ Priority: High</p>
+                        <p>📅 Due: 15 Feb 2026</p>
+                        <p>🔁 Recurring: Weekly</p>
+                        <p>⏰ Reminder: 2 hours before</p>
+                    </div>
+                    <div class="task-actions">
+                        <button class="action-btn complete-btn" onclick="completeTask('1')">[✅ Complete]</button>
+                        <button class="action-btn edit-btn" onclick="editTask('1')">[✏ Edit]</button>
+                        <button class="action-btn delete-btn" onclick="deleteTask('1')">[🗑 Delete]</button>
+                    </div>
+                </div>
+                
+                <div class="task-card">
+                    <div class="task-info">
+                        <h3>💻 Deploy Microservices</h3>
+                        <p>🏷 Tags: Backend, Production</p>
+                        <p>⚡ Priority: Medium</p>
+                        <p>📅 Due: 18 Feb 2026</p>
+                        <p>🔁 Recurring: None</p>
+                        <p>⏰ Reminder: 1 day before</p>
+                    </div>
+                    <div class="task-actions">
+                        <button class="action-btn complete-btn" onclick="completeTask('2')">[✅ Complete]</button>
+                        <button class="action-btn edit-btn" onclick="editTask('2')">[✏ Edit]</button>
+                        <button class="action-btn delete-btn" onclick="deleteTask('2')">[🗑 Delete]</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Activity Log -->
+        <div class="activity-log" id="activityLog" style="display: none;">
+            <h3>Activity Log</h3>
+            <div id="activity-log-list">
+                <div class="activity-item">
+                    <strong>Task Created</strong> - 10:05 AM<br>
+                    <small>Complete Kubernetes Assignment</small>
+                </div>
+                <div class="activity-item">
+                    <strong>Task Updated</strong> - 10:10 AM<br>
+                    <small>Updated priority to HIGH</small>
+                </div>
+                <div class="activity-item">
+                    <strong>Task Completed</strong> - 12:00 PM<br>
+                    <small>Complete Kubernetes Assignment</small>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Notification Popup -->
+        <div class="notification" id="notification">
+            <strong>⏰ Reminder!</strong><br>
+            <span id="notification-message">Your task "Complete Kubernetes Assignment" is due in 2 hours.</span>
+        </div>
+        
+        <!-- Add Task Modal -->
+        <div id="add-task-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:2000; justify-content:center; align-items:center;">
+            <div style="background:white; color:black; padding:30px; border-radius:10px; width:500px; max-width:90%;">
+                <h2>Add New Task</h2>
+                <form id="add-task-form">
+                    <div style="margin-bottom:15px;">
+                        <label>Title:</label>
+                        <input type="text" id="task-title" style="width:100%; padding:8px;" required>
+                    </div>
+                    <div style="margin-bottom:15px;">
+                        <label>Description:</label>
+                        <textarea id="task-description" style="width:100%; padding:8px;"></textarea>
+                    </div>
+                    <div style="margin-bottom:15px;">
+                        <label>Due Date:</label>
+                        <input type="date" id="task-due-date" style="width:100%; padding:8px;">
+                    </div>
+                    <div style="margin-bottom:15px;">
+                        <label>Priority:</label>
+                        <select id="task-priority" style="width:100%; padding:8px;">
+                            <option value="LOW">Low</option>
+                            <option value="MEDIUM" selected>Medium</option>
+                            <option value="HIGH">High</option>
+                        </select>
+                    </div>
+                    <div style="margin-bottom:15px;">
+                        <label>Tags (comma separated):</label>
+                        <input type="text" id="task-tags" style="width:100%; padding:8px;" placeholder="work,important,devops">
+                    </div>
+                    <div style="margin-bottom:15px;">
+                        <label>Recurrence:</label>
+                        <select id="task-recurrence" style="width:100%; padding:8px;">
+                            <option value="">None</option>
+                            <option value="DAILY">Daily</option>
+                            <option value="WEEKLY">Weekly</option>
+                            <option value="MONTHLY">Monthly</option>
+                            <option value="YEARLY">Yearly</option>
+                        </select>
+                    </div>
+                    <div style="margin-bottom:15px;">
+                        <label>Reminder Time:</label>
+                        <input type="datetime-local" id="task-reminder" style="width:100%; padding:8px;">
+                    </div>
+                    <div style="display:flex; gap:10px; justify-content:flex-end;">
+                        <button type="button" onclick="hideAddTaskModal()" style="padding:10px 20px;">Cancel</button>
+                        <button type="submit" style="padding:10px 20px; background:#4CAF50; color:white;">Add Task</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
     <script>
-        // Add interactive effects
-        document.addEventListener('DOMContentLoaded', function() {
-            const cards = document.querySelectorAll('.feature-card');
-            cards.forEach((card, index) => {
-                card.style.animationDelay = `${index * 0.2}s`;
-            });
-
-            // Add hover effect enhancement
-            const buttons = document.querySelectorAll('.cta-button');
-            buttons.forEach(button => {
-                button.addEventListener('click', () => {
-                    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connecting...';
-                    setTimeout(() => {
-                        button.innerHTML = '<i class="fas fa-check-circle"></i> Connected!';
-                        button.style.background = 'linear-gradient(45deg, #00b894, #00a085)';
-                    }, 2000);
-                });
-            });
-
-            // Add floating animation to stats
-            const stats = document.querySelectorAll('.stat-number');
-            stats.forEach(stat => {
-                animateValue(stat, 0, parseInt(stat.textContent), 2000);
-            });
-
-            function animateValue(element, start, end, duration) {
-                let startTimestamp = null;
-                const step = (timestamp) => {
-                    if (!startTimestamp) startTimestamp = timestamp;
-                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                    const value = Math.floor(progress * (end - start) + start);
-                    element.textContent = value + (element.textContent.includes('%') ? '%' : (element.textContent.includes('K+') ? 'K+' : ''));
-                    if (progress < 1) {
-                        window.requestAnimationFrame(step);
-                    }
-                };
-                window.requestAnimationFrame(step);
+        // Simulated backend data for demonstration
+        let simulatedTasks = [
+            {
+                id: '1',
+                title: '📝 Complete Kubernetes Assignment',
+                description: 'Complete the advanced Kubernetes assignment for the cloud computing course',
+                due_date: new Date(Date.now() + 4*24*60*60*1000).toISOString(),
+                priority: 'HIGH',
+                tags: ['DevOps', 'Hackathon'],
+                status: 'TODO',
+                recurrence_pattern: 'WEEKLY',
+                reminder_time: new Date(Date.now() + 2*60*60*1000).toISOString(),
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+            },
+            {
+                id: '2',
+                title: '💻 Deploy Microservices',
+                description: 'Deploy the microservices application to production',
+                due_date: new Date(Date.now() + 7*24*60*60*1000).toISOString(),
+                priority: 'MEDIUM',
+                tags: ['Backend', 'Production'],
+                status: 'TODO',
+                recurrence_pattern: null,
+                reminder_time: new Date(Date.now() + 24*60*60*1000).toISOString(),
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
             }
+        ];
+        
+        let simulatedActivityLog = [
+            {id: '1', action: 'Task Created', timestamp: '10:05 AM', details: 'Complete Kubernetes Assignment'},
+            {id: '2', action: 'Task Updated', timestamp: '10:10 AM', details: 'Updated priority to HIGH'},
+            {id: '3', action: 'Task Completed', timestamp: '12:00 PM', details: 'Complete Kubernetes Assignment'},
+            {id: '4', action: 'Reminder Sent', timestamp: '09:00 AM', details: 'Daily standup meeting'},
+            {id: '5', action: 'Task Created', timestamp: 'Yesterday', details: 'Prepare presentation slides'}
+        ];
+
+        // Show dashboard when Start Managing Tasks button is clicked
+        document.getElementById('startButton').addEventListener('click', function() {
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connecting...';
+            setTimeout(() => {
+                this.innerHTML = '<i class="fas fa-check-circle"></i> Connected!';
+                this.style.background = 'linear-gradient(45deg, #00b894, #00a085)';
+                
+                // Show dashboard after connection
+                document.getElementById('dashboard').style.display = 'block';
+                document.getElementById('activityLog').style.display = 'block';
+                
+                // Scroll to dashboard
+                document.getElementById('dashboard').scrollIntoView({ behavior: 'smooth' });
+            }, 2000);
         });
+
+        // Show add task modal
+        function showAddTaskModal() {
+            document.getElementById('add-task-modal').style.display = 'flex';
+        }
+
+        // Hide add task modal
+        function hideAddTaskModal() {
+            document.getElementById('add-task-modal').style.display = 'none';
+        }
+
+        // Add a new task
+        async function addTask(event) {
+            event.preventDefault();
+            
+            const title = document.getElementById('task-title').value;
+            const description = document.getElementById('task-description').value;
+            const dueDate = document.getElementById('task-due-date').value;
+            const priority = document.getElementById('task-priority').value;
+            const tagsInput = document.getElementById('task-tags').value;
+            const recurrence = document.getElementById('task-recurrence').value;
+            const reminder = document.getElementById('task-reminder').value;
+            
+            // Parse tags
+            const tags = tagsInput ? tagsInput.split(',').map(tag => tag.trim()) : [];
+            
+            const newTask = {
+                id: Date.now().toString(), // Simple ID generation
+                title: title,
+                description: description,
+                priority: priority,
+                tags: tags,
+                status: 'TODO',
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+            };
+            
+            if (dueDate) {
+                newTask.due_date = new Date(dueDate).toISOString();
+            }
+            
+            if (recurrence) {
+                newTask.recurrence_pattern = recurrence;
+            }
+            
+            if (reminder) {
+                newTask.reminder_time = new Date(reminder).toISOString();
+            }
+            
+            // Add to simulated tasks
+            simulatedTasks.push(newTask);
+            
+            // Reset form and close modal
+            hideAddTaskModal();
+            document.getElementById('add-task-form').reset();
+            
+            // Reload tasks
+            loadTasks();
+            showNotification(`Task "${title}" added successfully!`);
+            
+            // Add to activity log
+            simulatedActivityLog.unshift({
+                id: Date.now().toString(),
+                action: 'Task Created',
+                timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                details: title
+            });
+            loadActivityLog();
+        }
+
+        // Complete a task
+        async function completeTask(taskId) {
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 300));
+            
+            const taskIndex = simulatedTasks.findIndex(task => task.id === taskId);
+            if (taskIndex !== -1) {
+                simulatedTasks[taskIndex].status = 'COMPLETED';
+                
+                // Find the task to get its title
+                const task = simulatedTasks[taskIndex];
+                
+                // Reload tasks
+                loadTasks();
+                showNotification(`Task "${task.title}" completed successfully!`);
+                
+                // Add to activity log
+                simulatedActivityLog.unshift({
+                    id: Date.now().toString(),
+                    action: 'Task Completed',
+                    timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                    details: task.title
+                });
+                loadActivityLog();
+            }
+        }
+
+        // Delete a task
+        async function deleteTask(taskId) {
+            if (!confirm('Are you sure you want to delete this task?')) {
+                return;
+            }
+            
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 300));
+            
+            const taskIndex = simulatedTasks.findIndex(task => task.id === taskId);
+            if (taskIndex !== -1) {
+                const taskTitle = simulatedTasks[taskIndex].title;
+                simulatedTasks.splice(taskIndex, 1);
+                
+                // Reload tasks
+                loadTasks();
+                showNotification(`Task "${taskTitle}" deleted successfully!`);
+                
+                // Add to activity log
+                simulatedActivityLog.unshift({
+                    id: Date.now().toString(),
+                    action: 'Task Deleted',
+                    timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+                    details: taskTitle
+                });
+                loadActivityLog();
+            }
+        }
+
+        // Edit a task (placeholder for now)
+        function editTask(taskId) {
+            showNotification('Edit functionality coming soon!');
+        }
+
+        // Perform search (placeholder for now)
+        function performSearch() {
+            showNotification('Search functionality coming soon!');
+        }
+
+        // Apply filters (placeholder for now)
+        function applyFilters() {
+            showNotification('Filter functionality coming soon!');
+        }
+
+        // Load tasks (using simulated data)
+        async function loadTasks() {
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            const taskList = document.getElementById('task-list');
+            taskList.innerHTML = '';
+            
+            simulatedTasks.forEach(task => {
+                const taskCard = document.createElement('div');
+                taskCard.className = 'task-card';
+                
+                // Format tags
+                const tagsString = task.tags && task.tags.length > 0 ? task.tags.join(', ') : 'No tags';
+                
+                // Format due date
+                const dueDate = task.due_date ? new Date(task.due_date).toLocaleDateString() : 'No due date';
+                
+                // Format recurrence
+                const recurrence = task.recurrence_pattern || 'None';
+                
+                // Format reminder
+                const reminder = task.reminder_time ? new Date(task.reminder_time).toLocaleString() : 'None';
+                
+                taskCard.innerHTML = `
+                    <div class="task-info">
+                        <h3>${task.title}</h3>
+                        <p>🏷 Tags: ${tagsString}</p>
+                        <p>⚡ Priority: ${task.priority}</p>
+                        <p>📅 Due: ${dueDate}</p>
+                        <p>🔁 Recurring: ${recurrence}</p>
+                        <p>⏰ Reminder: ${reminder}</p>
+                    </div>
+                    <div class="task-actions">
+                        <button class="action-btn complete-btn" onclick="completeTask('${task.id}')">[✅ Complete]</button>
+                        <button class="action-btn edit-btn" onclick="editTask('${task.id}')">[✏ Edit]</button>
+                        <button class="action-btn delete-btn" onclick="deleteTask('${task.id}')">[🗑 Delete]</button>
+                    </div>
+                `;
+                
+                taskList.appendChild(taskCard);
+            });
+        }
+
+        // Load activity log (using simulated data)
+        async function loadActivityLog() {
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 300));
+            
+            const activityList = document.getElementById('activity-log-list');
+            activityList.innerHTML = '';
+            
+            simulatedActivityLog.forEach(activity => {
+                const activityItem = document.createElement('div');
+                activityItem.className = 'activity-item';
+                activityItem.innerHTML = `
+                    <strong>${activity.action}</strong> - ${activity.timestamp}<br>
+                    <small>${activity.details}</small>
+                `;
+                activityList.appendChild(activityItem);
+            });
+        }
+
+        // Show notification
+        function showNotification(message, isError = false) {
+            const notification = document.getElementById('notification');
+            const notificationMessage = document.getElementById('notification-message');
+            
+            notificationMessage.textContent = message;
+            notification.style.display = 'block';
+            
+            if (isError) {
+                notification.style.background = 'rgba(255, 0, 0, 0.9)';
+            } else {
+                notification.style.background = 'rgba(255, 165, 0, 0.9)';
+            }
+            
+            // Hide notification after 5 seconds
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 5000);
+        }
+
+        // Initialize the app
+        function initApp() {
+            // Set up form submission
+            document.getElementById('add-task-form').addEventListener('submit', addTask);
+        }
+
+        // Start the app when the page loads
+        window.onload = initApp;
     </script>
 </body>
 </html>
