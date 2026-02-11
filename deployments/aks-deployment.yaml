@@ -1,0 +1,80 @@
+# This file contains configurations specific to deploying on Azure AKS
+# It includes configurations for using Azure-managed services where possible
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: azure-db-secret
+type: Opaque
+data:
+  username: <base64-encoded-username>
+  password: <base64-encoded-password>
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aks-config
+data:
+  DATABASE_HOST: "your-postgres-server.postgres.database.azure.com"
+  DATABASE_NAME: "todo_db"
+  KAFKA_BOOTSTRAP_SERVERS: "your-redpanda-cluster.cloud.redpanda.com:9092"
+---
+# Updated deployment to use Azure services
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todo-api-aks
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: todo-api
+  template:
+    metadata:
+      labels:
+        app: todo-api
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "todo-api"
+        dapr.io/app-port: "8000"
+    spec:
+      containers:
+      - name: todo-api
+        image: your-registry.azurecr.io/todo-api:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: aks-config
+              key: DATABASE_HOST
+        - name: DATABASE_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: aks-config
+              key: DATABASE_NAME
+        - name: KAFKA_BOOTSTRAP_SERVERS
+          valueFrom:
+            configMapKeyRef:
+              name: aks-config
+              key: KAFKA_BOOTSTRAP_SERVERS
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: azure-db-secret
+              key: username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: azure-db-secret
+              key: password
+        - name: USE_DAPR
+          value: "true"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "200m"
+          limits:
+            memory: "512Mi"
+            cpu: "400m"
