@@ -1,0 +1,78 @@
+# Global settings
+global:
+  imageRegistry: ""
+  imagePullSecrets: []
+  storageClass: ""
+
+# Image settings
+image:
+  repository: todo-api
+  pullPolicy: IfNotPresent
+  tag: ""
+
+# Service settings
+service:
+  type: ClusterIP
+  port: 8000
+
+# Resources
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+# Kafka settings
+kafka:
+  enabled: true
+  clusterName: todo-kafka
+  replicaCount: 1
+  config:
+    defaultReplicationFactor: 1
+    minInsyncReplicas: 1
+
+# PostgreSQL settings
+postgresql:
+  enabled: true
+  auth:
+    postgresPassword: "todo-postgres-password"
+    database: "todo_db"
+  primary:
+    persistence:
+      enabled: false
+
+# Dapr settings
+dapr:
+  enabled: true
+  appId: "todo-api"
+  appPort: 8000
+  config: "dapr-config"
+
+# Environment variables
+env:
+  DATABASE_URL: "postgresql://postgres:todo-postgres-password@todo-chatbot-postgresql:5432/todo_db"
+  KAFKA_BOOTSTRAP_SERVERS: "todo-kafka-kafka-brokers:9092"
+  USE_DAPR: "true"
+
+# Ingress settings
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+
+# Node selector
+nodeSelector: {}
+
+# Tolerations
+tolerations: []
+
+# Affinity
+affinity: {}

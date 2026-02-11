@@ -1,0 +1,15 @@
+apiVersion: v2
+name: todo-chatbot
+description: Advanced Todo Chatbot with event-driven architecture
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+dependencies:
+  - name: kafka
+    version: 0.38.0
+    repository: https://strimzi.io/charts/
+    condition: kafka.enabled
+  - name: postgresql
+    version: 12.x.x
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
